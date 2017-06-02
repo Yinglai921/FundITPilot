@@ -1,8 +1,0 @@
-name,Id,Complexity,Budget,Left days from today,Partners
-AMC Ambassador Brougham,0,0.5,100,4,3
-AMC Ambassador DPL,1,0.6,200,6,3
-AMC Ambassador SST,2,0.2,400,20,3
-AMC Concord DL 6,3,0.1,500,30,2
-AMC Concord DL,4,0.7,230,42,1
-AMC Concord DL,5,0.3,150,23,3
-AMC Concord,6,0.8,970,15,2

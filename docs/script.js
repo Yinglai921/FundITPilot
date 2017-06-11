@@ -43,6 +43,7 @@
 		width = 960 - margin.right - margin.left,
 		height = 800 - margin.top - margin.bottom;
 
+
 	var i = 0,
 		duration = 750,
 		root,
@@ -85,6 +86,32 @@
 			d._children = null;
 	  	}
 		update(d);
+
+		searchKeyword(d.name);
+		// var result = searchKeyword(d.name);
+		// console.log(result);
+	}
+
+	function searchKeyword(keyword){
+
+		$.getJSON("data.json", function(result){
+
+			var options = {
+				threshold: 0.1,
+				keys: ['keywords']
+			};
+			
+			var fuse = new Fuse(result, options)
+			var searchedResult = fuse.search(keyword);
+			$("#checkbox-open").prop('checked', false);
+			$('#searched-keyword').html(keyword);
+			$("#searched-result").html('');
+			$.each(searchedResult, function(i, field){
+                $("#searched-result").append(
+					"<tr>v<th scope='row'>" + (i+1) + "</th><td><a href="+ field.url + ">" + field.title + "</a></td><td>" + field.callStatus + "</td><td>" + field.plannedOpeningDate + "</td></tr>"
+				);
+            });
+		})
 	}
 
 	function openPaths(paths){
@@ -98,6 +125,44 @@
 				update(paths[i]);
 			}
 		}
+	}
+	
+	$("#checkbox-open").change(function() {
+		var checked = false;
+		if(this.checked) {
+			checked = true;
+		}else{
+			checked = false;
+		}
+		filterOpenStatus(checked);
+	});
+
+	function filterOpenStatus(status){
+		$.getJSON("data.json", function(result){
+
+			var options = {
+				threshold: 0.1,
+				keys: ['keywords']
+			};
+			
+			var fuse = new Fuse(result, options);
+			var keyword = $("#searched-keyword").html();
+			var searchedResult = fuse.search(keyword);
+			$("#searched-result").html('');
+			$.each(searchedResult, function(i, field){
+				if (status == true){
+					if(field.callStatus == 'Open'){
+						$("#searched-result").append(
+							"<tr>v<th scope='row'>" + (i+1) + "</th><td><a href="+ field.url + ">" + field.title + "</a></td><td>" + field.callStatus + "</td><td>" + field.plannedOpeningDate + "</td></tr>"
+						);
+					}
+				}else{
+					$("#searched-result").append(
+						"<tr>v<th scope='row'>" + (i+1) + "</th><td><a href="+ field.url + ">" + field.title + "</a></td><td>" + field.callStatus + "</td><td>" + field.plannedOpeningDate + "</td></tr>"
+					);	
+				}
+            });
+		})
 	}
 
 	d3.json("keywords.json", function(error,values){

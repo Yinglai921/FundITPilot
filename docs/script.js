@@ -188,15 +188,15 @@
 			tags_count.push({recid: counter, tag: tags_fixed[counter][0], number: tags_fixed[counter][1]});
 		}
 		
-		console.log(tags_count);
+		//console.log(tags_count);
 		
 		$(function () {
 			$('#grid').w2grid({
 				name: 'grid',
 				header: 'List of Names',
 				columns: [
-					{ field: 'tag', caption: 'First Name', size: '30%' },
-					{ field: 'number', caption: 'Last Name', size: '30%' }
+					{ field: 'tag', caption: 'Tag', size: '30%' },
+					{ field: 'number', caption: 'Occourances', size: '30%' }
 				],
 				records: tags_count
 			});

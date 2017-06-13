@@ -33,6 +33,8 @@
 	        }
 	        return [index,leaves];
 	}
+	
+	var tags_count = {};
 
 	var div = d3.select("body")
 		.append("div") // declare the tooltip div
@@ -42,6 +44,7 @@
 	var margin = {top: 20, right: 120, bottom: 20, left: 120},
 		width = 960 - margin.right - margin.left,
 		height = 800 - margin.top - margin.bottom;
+
 
 	var i = 0,
 		duration = 750,
@@ -59,6 +62,9 @@
 	var svg = d3.select("#tree-chart").append("svg")
 		.attr("width", width + margin.right + margin.left)
 		.attr("height", height + margin.top + margin.bottom)
+		.call(d3.behavior.zoom().on("zoom", function () {
+			svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+		}))
 	  	.append("g")
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -82,6 +88,32 @@
 			d._children = null;
 	  	}
 		update(d);
+
+		searchKeyword(d.name);
+		// var result = searchKeyword(d.name);
+		// console.log(result);
+	}
+
+	function searchKeyword(keyword){
+
+		$.getJSON("data.json", function(result){
+
+			var options = {
+				threshold: 0.1,
+				keys: ['keywords']
+			};
+			
+			var fuse = new Fuse(result, options)
+			var searchedResult = fuse.search(keyword);
+			$("#checkbox-open").prop('checked', false);
+			$('#searched-keyword').html(keyword);
+			$("#searched-result").html('');
+			$.each(searchedResult, function(i, field){
+                $("#searched-result").append(
+					"<tr>v<th scope='row'>" + (i+1) + "</th><td><a href="+ field.url + ">" + field.title + "</a></td><td>" + field.callStatus + "</td><td>" + field.plannedOpeningDate + "</td></tr>"
+				);
+            });
+		})
 	}
 
 	function openPaths(paths){
@@ -96,7 +128,74 @@
 			}
 		}
 	}
+	
+	$("#checkbox-open").change(function() {
+		var checked = false;
+		if(this.checked) {
+			checked = true;
+		}else{
+			checked = false;
+		}
+		filterOpenStatus(checked);
+	});
 
+	function filterOpenStatus(status){
+		$.getJSON("data.json", function(result){
+
+			var options = {
+				threshold: 0.1,
+				keys: ['keywords']
+			};
+			
+			var fuse = new Fuse(result, options);
+			var keyword = $("#searched-keyword").html();
+			var searchedResult = fuse.search(keyword);
+			$("#searched-result").html('');
+			$.each(searchedResult, function(i, field){
+				if (status == true){
+					if(field.callStatus == 'Open'){
+						$("#searched-result").append(
+							"<tr>v<th scope='row'>" + (i+1) + "</th><td><a href="+ field.url + ">" + field.title + "</a></td><td>" + field.callStatus + "</td><td>" + field.plannedOpeningDate + "</td></tr>"
+						);
+					}
+				}else{
+					$("#searched-result").append(
+						"<tr>v<th scope='row'>" + (i+1) + "</th><td><a href="+ field.url + ">" + field.title + "</a></td><td>" + field.callStatus + "</td><td>" + field.plannedOpeningDate + "</td></tr>"
+					);	
+				}
+            });
+		})
+	}
+	
+	//Try to add tags
+	var tags_array, tags_table;
+	
+	d3.json("data.json", function(data) {
+		data.forEach(function(data) {
+			if(data["tags"] != 0){
+				data["tags"].forEach(function(i) {
+					tags_count[i] = (tags_count[i]||0)+1;
+				});
+			}
+		});
+		
+		tags_array = Object.entries(tags_count);
+		
+		//Up to this point we have an array of all tags.
+		
+		//Try to create and add the table
+		tags_table = TableSort(
+			"#my_tags",
+			[
+				{ text: 'Tags', sort: TableSort.alphabet },
+				{ text: 'Number', sort: TableSort.numeric, sort_column: true }
+			],
+			tags_array,
+			{ width: '200px', height: '500px' }
+        );
+		d3.select("#my_tags").append("svg");
+	});
+	
 	d3.json("keywords.json", function(error,values){
 		root = values;
 		select2_data = extract_select2_data(values,[],0)[1];//I know, not the prettiest...

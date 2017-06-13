@@ -33,8 +33,6 @@
 	        }
 	        return [index,leaves];
 	}
-	
-	var tags_count = {};
 
 	var div = d3.select("body")
 		.append("div") // declare the tooltip div
@@ -168,8 +166,9 @@
 	}
 	
 	//Try to add tags
-	var tags_array, tags_table;
-	
+	var tags_fixed, counter;
+	var tags_count = {};
+		
 	d3.json("data.json", function(data) {
 		data.forEach(function(data) {
 			if(data["tags"] != 0){
@@ -179,21 +178,30 @@
 			}
 		});
 		
-		tags_array = Object.entries(tags_count);
+		tags_fixed = Object.entries(tags_count);
 		
-		//Up to this point we have an array of all tags.
+		delete tags_count;
 		
-		//Try to create and add the table
-		tags_table = TableSort(
-			"#my_tags",
-			[
-				{ text: 'Tags', sort: TableSort.alphabet },
-				{ text: 'Number', sort: TableSort.numeric, sort_column: true }
-			],
-			tags_array,
-			{ width: '200px', height: '500px' }
-        );
-		d3.select("#my_tags").append("svg");
+		tags_count = [];
+		
+		for (counter = 0; counter < tags_fixed.length; counter++){
+			tags_count.push({recid: counter, tag: tags_fixed[counter][0], number: tags_fixed[counter][1]});
+		}
+		
+		console.log(tags_count);
+		
+		$(function () {
+			$('#grid').w2grid({
+				name: 'grid',
+				header: 'List of Names',
+				columns: [
+					{ field: 'tag', caption: 'First Name', size: '30%' },
+					{ field: 'number', caption: 'Last Name', size: '30%' }
+				],
+				records: tags_count
+			});
+		});
+
 	});
 	
 	d3.json("keywords.json", function(error,values){

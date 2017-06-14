@@ -28,7 +28,10 @@
      <div class="row">
       <div class="col-md-12">
        <div>
-         <h3> Show the topics  </h3>
+         <h3> Keyword: <span id="searched-keyword"></span></h3>
+         <div class="checkbox">
+          <label><input type="checkbox" value="" id="checkbox-open">Open only</label>
+        </div>
        </div>
        <div id="scatterplot-chart">
          <table class="table">
@@ -40,25 +43,7 @@
                 <th>Planned opening date</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Improving access by innovative SMEs to alternative forms of finance</td>
-                <td>Open</td>
-                <td>25 April 2017</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Valorisation of liquid and solid side streams from bio-based operations into high added-value products to create new feedstock for bio-based products</td>
-                <td>Open</td>
-                <td>07 September 2017</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Integrated multi-valorisation of algae into advanced materials and high added-value additives</td>
-                <td>Open</td>
-                <td>11 April 2017</td>
-              </tr>
+            <tbody id="searched-result">
             </tbody>
           </table>
        </div>
@@ -67,6 +52,7 @@
 	 <div id="grid" style="width: 100%; height: 250px;"></div>
   </div>
   
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fuse.js/2.6.1/fuse.min.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>

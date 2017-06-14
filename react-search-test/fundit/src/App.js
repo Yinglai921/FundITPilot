@@ -27,7 +27,7 @@ class ResultTable extends React.Component {
           <tr>
           <td><a href={results.url}>{results.title}</a></td>
           <td>{results.keywords}</td>
-          <td>{results.desc}</td>
+          <td dangerouslySetInnerHTML={{__html: results.desc}} />
           </tr>
 
         </tbody>
@@ -82,8 +82,8 @@ class App extends Component {
             <Col sm="12">
               <FuzzySearch
                 list={data}
-                keys={['keywords', 'tags', 'flags', 'desc']}
-                width={930}
+                keys={['title','keywords', 'tags', 'flags', 'desc']}
+                width={1020}
                 //onSelect={action('selected')}
                 onSelect={this.y}
                 resultsTemplate={this.x}

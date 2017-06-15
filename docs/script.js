@@ -190,6 +190,44 @@
 	})
 
 	d3.select(self.frameElement).style("height", "800px");
+	
+	var tags_fixed, counter;
+	var tags_count = {};
+		
+	d3.json("data.json", function(data) {
+		data.forEach(function(data) {
+			if(data["tags"] != 0){
+				data["tags"].forEach(function(i) {
+					tags_count[i] = (tags_count[i]||0)+1;
+				});
+			}
+		});
+		
+		tags_fixed = Object.entries(tags_count);
+		
+		delete tags_count;
+		
+		tags_count = [];
+		
+		for (counter = 0; counter < tags_fixed.length; counter++){
+			tags_count.push({recid: counter, tag: tags_fixed[counter][0], number: tags_fixed[counter][1]});
+		}
+		
+		//console.log(tags_count);
+		
+		$(function () {
+			$('#grid').w2grid({
+				name: 'grid',
+				header: 'List of Names',
+				columns: [
+					{ field: 'tag', caption: 'Tag', size: '30%' },
+					{ field: 'number', caption: 'Occourances', size: '30%' }
+				],
+				records: tags_count
+			});
+		});
+
+	});
 
 	function update(source) {
 		// Compute the new tree layout.

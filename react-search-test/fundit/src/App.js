@@ -8,6 +8,8 @@ import data from './data.json';
 
 import SearchBar from './components/search-bar';
 import ResultList from './components/result-list';
+import D3KeywordThree from './components/d3-keyword-tree';
+
 
 class App extends Component {
   
@@ -118,6 +120,7 @@ class App extends Component {
               onSearchFilterTermChange={this.searchFilterChange}
               onSearchTermChange={topicSearch}
             />
+            <D3KeywordThree  />
             <ResultList topics={this.state.topics}/>
           </div>
         </div>

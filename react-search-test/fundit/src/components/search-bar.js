@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import KeywordSuggestionModal from './keyword-suggestion-modal';
+
 class SearchBar extends Component{
     constructor(props){
         super(props);
@@ -11,16 +13,21 @@ class SearchBar extends Component{
 
     render(){
         return (
-            <div className="col-md-12 search-bar">
+            <div className="search-bar col-md-12">
                 <form className="form-horizontal">
-                    <div className="form-group">
-                        <label className="col-sm-2 control-label">Search in titles</label>
-                        <div className="col-sm-10">
+                    <div className="form-group row">
+                        <label className="col-sm-2 control-label">
+                            Search in titles
+                        </label>
+                        <div className="col-sm-6">
                             <input 
                                 type="search" 
                                 className="form-control" 
                                 value={this.state.term}
                                 onChange={event => this.onSearchChange(event.target.value)}/>
+                        </div>
+                        <div className="col-sm-2 offset-sm-2">
+                            <KeywordSuggestionModal />
                         </div>
                     </div>
                 </form>

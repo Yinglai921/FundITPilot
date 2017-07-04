@@ -7,7 +7,7 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 70px;
   padding: 20px;
   color: white;
 }
@@ -29,3 +29,31 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
+.node {
+		cursor: pointer;
+	}
+
+	.node circle {
+		fill: #fff;
+		stroke: steelblue;
+		stroke-width: 1.5px;
+	}
+
+	.found {
+		fill: #ff4136;
+		stroke: #ff4136;
+	}
+	.node text {
+		font: 10px sans-serif;
+	}
+
+	.link {
+		fill: none;
+		stroke: #ccc;
+		stroke-width: 1.5px;
+	}
+	/*Just to ensure the select2 box is "glued" to the top*/
+	.search {
+	  width: 100%;
+	}

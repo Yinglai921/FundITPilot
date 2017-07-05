@@ -9,6 +9,7 @@ import data from './data.json';
 import SearchBar from './components/search-bar';
 import ResultList from './components/result-list';
 import D3KeywordThree from './components/d3-keyword-tree';
+import FilterSidebar from './components/filter-sidebar';
 
 
 class App extends Component {
@@ -19,6 +20,7 @@ class App extends Component {
 
     this.state = {
         topics:[],
+        filterdTopics:[],
         keys: ["title"],
         filterOpenTopics: false
     };
@@ -51,11 +53,13 @@ class App extends Component {
           }
         })
         this.setState({
-            topics: filterResult
+            topics: result,
+            filterdTopics: filterResult
           })
       }else{
         this.setState({
-            topics: result
+            topics: result,
+            filterdTopics: result
         })
       }
   }
@@ -82,26 +86,22 @@ class App extends Component {
   //filter open topics
   searchFilterChange(state){
     if(state){
+      let filterResult = [];
+        this.state.topics.forEach((topic) => {
+          if(topic.callStatus == "Open"){
+            filterResult.push(topic);
+          }
+        })
       this.setState({
-        filterOpenTopics: true
+        filterOpenTopics: true,
+        filterdTopics: filterResult
       })
     }else{
       this.setState({
-        filterOpenTopics: false
+        filterOpenTopics: false,
+        filterdTopics: this.state.topics
       })
     }
-
-    // let filterdTopics = [];
-    // if(state){
-    //   if(this.state.topics !== null){
-    //     filterdTopics = this.state.topics.map((topic) =>{
-    //        return topic.callStatus == "open";
-    //     })
-    //   }
-    // }
-    // this.setState({
-    //   topics: filterdTopics
-    // })
 
   }
 
@@ -116,14 +116,25 @@ class App extends Component {
             </div>
             <SearchBar 
               onSearchScopeTermChange={this.searchScopeChange}
-              onSearchFilterTermChange={this.searchFilterChange}
               onSearchTermChange={topicSearch}
             />
             <div className="col-md-12">
+              <p>Keyword tree</p>
               <select id="search" className="search"></select>
             </div>
-            <D3KeywordThree  />
-            <ResultList topics={this.state.topics}/>
+            {/*<D3KeywordThree  />*/}
+            <div className="col-md-12">
+              <div className="row">
+                <div className="col-md-10">
+                  <ResultList topics={this.state.filterdTopics}/>
+                </div>
+                <div className="col-md-2">
+                  <FilterSidebar 
+                    onSearchFilterTermChange={this.searchFilterChange}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

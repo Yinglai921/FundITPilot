@@ -136,7 +136,9 @@ class D3KeywordTree extends Component{
 
 		//init search box
 		$("#search").select2({
-			data: select2_data,
+			placeholder: "Select a keyword",
+			allowClear: true,
+			data: select2_data
 			//containerCssClass: "search"
 		});
 

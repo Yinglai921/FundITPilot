@@ -27,7 +27,7 @@ class SearchBar extends Component{
                                 onChange={event => this.onSearchChange(event.target.value)}/>
                         </div>
                         <div className="col-sm-2 offset-sm-2">
-                            <KeywordSuggestionModal />
+                            {/*<KeywordSuggestionModal />*/}
                         </div>
                     </div>
                 </form>
@@ -51,13 +51,6 @@ class SearchBar extends Component{
                             <input type="checkbox" 
                                 onChange={event => this.onSearchScopeChange("desc", event.target.checked)}
                             /> In descriptions
-                        </label>
-                    </div>
-                    <div className="checkbox col-2">
-                        <label>
-                            <input type="checkbox" 
-                                onChange={event => this.props.onSearchFilterTermChange(event.target.checked)}
-                            /> Only open topics
                         </label>
                     </div>
                 </form>

@@ -101,16 +101,21 @@
 				keys: ['keywords']
 			};
 			
+			var temp = [];
+			
 			var fuse = new Fuse(result, options)
 			var searchedResult = fuse.search(keyword);
 			$("#checkbox-open").prop('checked', false);
 			$('#searched-keyword').html(keyword);
 			$("#searched-result").html('');
 			$.each(searchedResult, function(i, field){
+				temp.push(field);
                 $("#searched-result").append(
 					"<tr>v<th scope='row'>" + (i+1) + "</th><td><a href="+ field.url + ">" + field.title + "</a></td><td>" + field.callStatus + "</td><td>" + field.plannedOpeningDate + "</td></tr>"
 				);
             });
+			
+			updateTags(temp);
 		})
 	}
 
@@ -164,8 +169,33 @@
             });
 		})
 	}
+
+	d3.json("keywords.json", function(error,values){
+		root = values;
+		select2_data = extract_select2_data(values,[],0)[1];//I know, not the prettiest...
+		root.x0 = height / 2;
+		root.y0 = 0;
+		root.children.forEach(collapse);
+		update(root);
+		//init search box
+		$("#search").select2({
+			data: select2_data,
+			containerCssClass: "search"
+		});
+	});
+	//attach search box listener
+	$("#search").on("select2-selecting", function(e) {
+		var paths = searchTree(root,e.object.text,[]);
+		if(typeof(paths) !== "undefined"){
+			openPaths(paths);
+		}
+		else{
+			alert(e.object.text+" not found!");
+		}
+	})
+
+	d3.select(self.frameElement).style("height", "800px");
 	
-	//Try to add tags
 	var tags_fixed, counter;
 	var tags_count = {};
 		
@@ -195,8 +225,8 @@
 				name: 'grid',
 				header: 'List of Names',
 				columns: [
-					{ field: 'tag', caption: 'Tag', size: '30%' },
-					{ field: 'number', caption: 'Occourances', size: '30%' }
+					{ field: 'tag', caption: 'Tag', size: '30%', sortable: true},
+					{ field: 'number', caption: 'Occourances', size: '30%', sortable: true}
 				],
 				records: tags_count
 			});
@@ -204,31 +234,52 @@
 
 	});
 	
-	d3.json("keywords.json", function(error,values){
-		root = values;
-		select2_data = extract_select2_data(values,[],0)[1];//I know, not the prettiest...
-		root.x0 = height / 2;
-		root.y0 = 0;
-		root.children.forEach(collapse);
-		update(root);
-		//init search box
-		$("#search").select2({
-			data: select2_data,
-			containerCssClass: "search"
+	function updateTags(list_of_topics) {
+		
+		tags_count = {};
+		
+		list_of_topics.forEach(function(data) {
+			if(data["tags"] != 0){
+				data["tags"].forEach(function(i) {
+					tags_count[i] = (tags_count[i]||0)+1;
+				});
+			}
 		});
-	});
-	//attach search box listener
-	$("#search").on("select2-selecting", function(e) {
-		var paths = searchTree(root,e.object.text,[]);
-		if(typeof(paths) !== "undefined"){
-			openPaths(paths);
+		
+		tags_fixed = Object.entries(tags_count);
+		
+		delete tags_count;
+		
+		tags_count = [];
+		
+		for (counter = 0; counter < tags_fixed.length; counter++){
+			tags_count.push({recid: counter, tag: tags_fixed[counter][0], number: tags_fixed[counter][1]});
 		}
-		else{
-			alert(e.object.text+" not found!");
-		}
-	})
+		
+		w2ui['grid'].destroy();
 
-	d3.select(self.frameElement).style("height", "800px");
+		
+		$(function () {
+			$('#grid').w2grid({
+				name: 'grid',
+				header: 'List of Names',
+				columns: [
+					{ field: 'tag', caption: 'Tag', size: '30%', sortable: true},
+					{ field: 'number', caption: 'Occourances', size: '30%', sortable: true}
+				],
+				records: tags_count
+			});
+		});		
+		
+/*		w2ui['grid'].content('main', {
+				name: 'grid',
+				header: 'List of Names',
+				columns: [
+					{ field: 'tag', caption: 'Tag', size: '30%' },
+					{ field: 'number', caption: 'Occourances', size: '30%' }
+				],
+				records: tags_count});*/
+	};
 
 	function update(source) {
 		// Compute the new tree layout.

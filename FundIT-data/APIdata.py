@@ -10,7 +10,7 @@ JSON = json.loads(f.read())
 
 # extract 200 lines and adapt to our own data structure 
 data = []
-for i in list(range(200)):
+for i in list(range(len(JSON["topicData"]["Topics"]))):
     topic = {
         "title": " ",
         "identifier": " ",

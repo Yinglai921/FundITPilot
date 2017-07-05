@@ -102,8 +102,7 @@ class App extends Component {
     // this.setState({
     //   topics: filterdTopics
     // })
-    console.log("state: ",state)
-    console.log(this.state.filterOpenTopics)
+
   }
 
   render() {
@@ -120,6 +119,9 @@ class App extends Component {
               onSearchFilterTermChange={this.searchFilterChange}
               onSearchTermChange={topicSearch}
             />
+            <div className="col-md-12">
+              <select id="search" className="search"></select>
+            </div>
             <D3KeywordThree  />
             <ResultList topics={this.state.topics}/>
           </div>

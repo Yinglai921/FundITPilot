@@ -26,7 +26,9 @@ class KeywordSuggestionModal extends Component{
             <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
             <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
             <ModalBody>
-                <D3KeywordThree data={[5,10,1,3]} size={[500,500]} />
+                <p>Keyword tree</p>
+                <select id="search" className="search"></select>
+                <D3KeywordThree />
             </ModalBody>
             <ModalFooter>
                 {/*<Button color="primary" onClick={this.toggle}>Do Something</Button>*/}

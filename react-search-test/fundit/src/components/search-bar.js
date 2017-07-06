@@ -27,7 +27,7 @@ class SearchBar extends Component{
                                 onChange={event => this.onSearchChange(event.target.value)}/>
                         </div>
                         <div className="col-sm-2 offset-sm-2">
-                            {/*<KeywordSuggestionModal />*/}
+                            <KeywordSuggestionModal />
                         </div>
                     </div>
                 </form>

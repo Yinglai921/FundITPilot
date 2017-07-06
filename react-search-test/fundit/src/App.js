@@ -118,10 +118,6 @@ class App extends Component {
               onSearchScopeTermChange={this.searchScopeChange}
               onSearchTermChange={topicSearch}
             />
-            <div className="col-md-12">
-              <p>Keyword tree</p>
-              <select id="search" className="search"></select>
-            </div>
             {/*<D3KeywordThree  />*/}
             <div className="col-md-12">
               <div className="row">
